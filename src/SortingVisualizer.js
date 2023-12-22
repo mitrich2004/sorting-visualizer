@@ -157,7 +157,7 @@ const SortingVisualizer = () => {
         }
     }
 
-    useEffect(() => initializeArray());
+    useEffect(() => initializeArray(), []);
 
     return (
         <div>
