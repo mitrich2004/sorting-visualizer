@@ -4,7 +4,7 @@ import bubbleSort from './algorithms/bubbleSort';
 import insertionSort from './algorithms/insertionSort';
 import heapSort from './algorithms/heapSort';
 import quickSort from './algorithms/quickSort';
-import testSortingAlgorithm from './algorithms/tests';
+//import testSortingAlgorithm from './algorithms/tests';
 import mergeSort from './algorithms/mergeSort';
 
 //sorting algorithms tags
@@ -157,7 +157,7 @@ const SortingVisualizer = () => {
         }
     }
 
-    useEffect(() => initializeArray(), []);
+    useEffect(() => initializeArray());
 
     return (
         <div>
