@@ -17,7 +17,7 @@ const mergeSortName = "merge";
 
 //visual parameters
 const minBarHeight = 1;
-const maxBarHeight = 90;
+const maxBarHeight = 85;
 var arrayLength = 100;
 var animationDelay = 5;
 const barWidthCoefficient = 0.7;
@@ -199,7 +199,7 @@ const SortingVisualizer = () => {
                     return <div style = {
                         {
                             height: barHeight + 'vh', 
-                            width: 100 / arrayLength * barWidthCoefficient + '%', 
+                            width: 95 / arrayLength * barWidthCoefficient + '%', 
                             margin: 20 / arrayLength * barWidthCoefficient + '%'
                         }} 
                     className="array-bar" key={index}/>
