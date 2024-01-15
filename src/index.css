@@ -3,17 +3,58 @@ body
   background-color: Black;
 }
 
+.header
+{
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  background-color: #161616;
+}
+
+select, button
+{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1vw;
+  margin: 5px;
+  color: whitesmoke;
+  border-width: 0px;
+  border-radius: 5px;
+  width: 11%;
+  background-color: #444444;
+}
+
+select
+{
+  padding: 5px;
+}
+
+select:hover, button:hover
+{
+  cursor: pointer;
+  background-color: #222222;
+}
+
+select:disabled, button:disabled
+{
+  cursor: not-allowed;
+  color: #555555;
+  background-color: #333333;
+}
+
 .array-container
 {
+  display: flex;
+  justify-content: center;
   position: fixed;
-  bottom: 10px;
-  margin-left: 256px;
+  width: 100%;
+  height: 90vh;
+  bottom: 2%;
 }
 
 .array-bar
 {
-  width: 10px;
-  margin: 0 2px;
+  align-self: flex-end;
   display: inline-block;
   background-color: darkblue;
 }

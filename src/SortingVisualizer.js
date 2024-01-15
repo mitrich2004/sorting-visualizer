@@ -4,8 +4,8 @@ import bubbleSort from './algorithms/bubbleSort';
 import insertionSort from './algorithms/insertionSort';
 import heapSort from './algorithms/heapSort';
 import quickSort from './algorithms/quickSort';
-//import testSortingAlgorithm from './algorithms/tests';
 import mergeSort from './algorithms/mergeSort';
+//import testSortingAlgorithm from './algorithms/tests';
 
 //sorting algorithms tags
 const selectionSortName = "selection";
@@ -16,10 +16,11 @@ const quickSortName = "quick";
 const mergeSortName = "merge";
 
 //visual parameters
-const minBarHeight = 10;
-const maxBarHeight = 900;
-const arrayLength = 100;
-const animationDelay = 5;
+const minBarHeight = 1;
+const maxBarHeight = 90;
+var arrayLength = 100;
+var animationDelay = 5;
+const barWidthCoefficient = 0.7;
 const baseColor = 'DarkBlue'
 const accessColor = 'Red';
 const sortedColor = 'LimeGreen';
@@ -157,22 +158,51 @@ const SortingVisualizer = () => {
         }
     }
 
+    const setArrayLength = (newLength) => {
+        arrayLength = newLength;
+        initializeArray();
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => initializeArray(), []);
 
     return (
-        <div>
-            <button onClick={() => initializeArray()}>Generate Array</button>
-            <button onClick={() => prepareSortingAnimation(selectionSortName)}>Selection Sort</button>
-            <button onClick={() => prepareSortingAnimation(bubbleSortName)}>Bubble Sort</button>
-            <button onClick={() => prepareSortingAnimation(insertionSortName)}>Insertion Sort</button>
-            <button onClick={() => prepareSortingAnimation(mergeSortName)}>Merge Sort</button>
-            <button onClick={() => prepareSortingAnimation(heapSortName)}>Heap Sort</button>
-            <button onClick={() => prepareSortingAnimation(quickSortName)}>Quick Sort</button>
+        <div className="main-container">
+            <div className="header">
+                <button onClick={() => initializeArray()} disabled={isSorting}>Generate Array</button>
+                <button onClick={() => prepareSortingAnimation(selectionSortName)} disabled={isSorting}>Selection Sort</button>
+                <button onClick={() => prepareSortingAnimation(bubbleSortName)} disabled={isSorting}>Bubble Sort</button>
+                <button onClick={() => prepareSortingAnimation(insertionSortName)} disabled={isSorting}>Insertion Sort</button>
+                <button onClick={() => prepareSortingAnimation(mergeSortName)} disabled={isSorting}>Merge Sort</button>
+                <button onClick={() => prepareSortingAnimation(heapSortName)} disabled={isSorting}>Heap Sort</button>
+                <button onClick={() => prepareSortingAnimation(quickSortName)} disabled={isSorting}>Quick Sort</button>
+
+                <select id="arrayLengthSelector" onChange={() => setArrayLength(document.getElementById("arrayLengthSelector").value)} disabled={isSorting}>
+                    <option value="25">Bars: 25</option>
+                    <option value="50">Bars: 50</option>
+                    <option value="75">Bars: 75</option>
+                    <option value="100" selected="selected">Bars: 100</option>
+                    <option value="125">Bars: 125</option>
+                    <option value="125">Bars: 150</option>
+                </select>
+
+                <select id="animationSpeedSelector" onChange={() => {animationDelay = document.getElementById("animationSpeedSelector").value}} disabled={isSorting}>
+                    <option value="10">Speed: 0.5x</option>
+                    <option value="5" selected="selected">Speed: 1x</option>
+                    <option value="3.3">Speed: 1.5x</option>
+                    <option value="2.5">Speed: 2x</option>
+                </select>
+            </div>
 
             <div className="array-container" ref={reference}>
-                {array.map((value, index) => {
-                    return <div style={{height: value + 'px'}} className="array-bar" key={index}/>
+                {array.map((barHeight, index) => {
+                    return <div style = {
+                        {
+                            height: barHeight + 'vh', 
+                            width: 100 / arrayLength * barWidthCoefficient + '%', 
+                            margin: 20 / arrayLength * barWidthCoefficient + '%'
+                        }} 
+                    className="array-bar" key={index}/>
                 })}
             </div>
         </div>
