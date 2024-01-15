@@ -17,7 +17,7 @@ const mergeSortName = "merge";
 
 //visual parameters
 const minBarHeight = 1;
-const maxBarHeight = 85;
+const maxBarHeight = 80;
 var arrayLength = 100;
 var animationDelay = 5;
 const barWidthCoefficient = 0.7;
