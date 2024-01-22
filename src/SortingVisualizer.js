@@ -5,7 +5,7 @@ import insertionSort from './algorithms/insertionSort';
 import heapSort from './algorithms/heapSort';
 import quickSort from './algorithms/quickSort';
 import mergeSort from './algorithms/mergeSort';
-import testSortingAlgorithm from './algorithms/tests';
+//import testSortingAlgorithm from './algorithms/tests';
 import shellSort from './algorithms/shellSort';
 import shakerSort from './algorithms/shakerSort';
 
