@@ -12,7 +12,7 @@ body
   background-color: #161616;
 }
 
-select, button
+select, button, p
 {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1vw;
@@ -20,13 +20,20 @@ select, button
   color: whitesmoke;
   border-width: 0px;
   border-radius: 0.5vh;
-  width: 11%;
+  width: 13.6%;
   background-color: #444444;
 }
 
 select
 {
   padding: 0.5vh;
+}
+
+p
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 select:hover, button:hover

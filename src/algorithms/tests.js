@@ -4,6 +4,8 @@ import insertionSort from "./insertionSort";
 import heapSort from "./heapSort";
 import quickSort from "./quickSort";
 import mergeSort from "./mergeSort";
+import shellSort from "./shellSort";
+import shakerSort from "./shakerSort";
 
 const times = 100;
 const maxSize = 150;
@@ -29,7 +31,9 @@ function testSortingAlgorithm(algorithm)
         {
             case "selection": sortedArray = selectionSort(array).result; break;
             case "bubble": sortedArray = bubbleSort(array).result; break;
+            case "shaker": sortedArray = shakerSort(array).result; break;
             case "insertion": sortedArray = insertionSort(array).result; break;
+            case "shell": sortedArray = shellSort(array).result; break;
             case "merge": sortedArray = mergeSort(array).result; break;
             case "heap": sortedArray = heapSort(array).result; break;
             case "quick": sortedArray = quickSort(array).result; break;

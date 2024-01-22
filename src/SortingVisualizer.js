@@ -5,25 +5,39 @@ import insertionSort from './algorithms/insertionSort';
 import heapSort from './algorithms/heapSort';
 import quickSort from './algorithms/quickSort';
 import mergeSort from './algorithms/mergeSort';
-//import testSortingAlgorithm from './algorithms/tests';
+import testSortingAlgorithm from './algorithms/tests';
+import shellSort from './algorithms/shellSort';
+import shakerSort from './algorithms/shakerSort';
 
 //sorting algorithms tags
 const selectionSortName = "selection";
 const bubbleSortName = "bubble";
+const shakerSortName = "shaker";
 const insertionSortName = "insertion";
+const shellSortName = "shell";
 const heapSortName = "heap";
 const quickSortName = "quick";
 const mergeSortName = "merge";
+//pancake, comb
+
+//distribution types
+const uniformDistName = "uniform";
+const normalDistName = "normal";
+const exponentialDistName = "exponential";
 
 //visual parameters
 const minBarHeight = 1;
 const maxBarHeight = 80;
-var arrayLength = 100;
-var animationDelay = 5;
 const barWidthCoefficient = 0.7;
 const baseColor = 'DarkBlue'
 const accessColor = 'Red';
 const sortedColor = 'LimeGreen';
+
+//sorting parameters
+var operationsMade = 0;
+var arrayLength = 100;
+var animationDelay = 5;
+var distribution = "uniform";
 
 const SortingVisualizer = () => {
     const [array, setArray] = useState([]);
@@ -33,7 +47,9 @@ const SortingVisualizer = () => {
     // test all sorting algorithms
     //console.log("Selection: " + testSortingAlgorithm(bubbleSortName));
     //console.log("Bubble: " + testSortingAlgorithm(selectionSortName));
+    //console.log("Shaker: " + testSortingAlgorithm(shakerSortName));
     //console.log("Insertion: " + testSortingAlgorithm(insertionSortName));
+    //console.log("Shell: " + testSortingAlgorithm(shellSortName));
     //console.log("Merge " + testSortingAlgorithm(mergeSortName));
     //console.log("Heap " + testSortingAlgorithm(heapSortName));
     //console.log("Quick " + testSortingAlgorithm(quickSortName));
@@ -46,14 +62,78 @@ const SortingVisualizer = () => {
         }
         
         resetBarsColor();
+        operationsMade = -1;
+        updateOperationsCounter();
+        
+        var numbers = [];
+        
+        switch(distribution)
+        {
+            case uniformDistName: numbers = uniformDistributionGeneration(); break;
+            case normalDistName: numbers = normalDistributionGeneration(); break;
+            case exponentialDistName: numbers = exponentialDistributionGeneration(); break;
+            default: break;
+        }
+
+        setArray(numbers);   
+    }
+
+    const uniformDistributionGeneration = () =>
+    {
         const numbers = [];
 
         for (let i = 0; i < arrayLength; ++i)
         {
-            numbers.push(Math.floor(Math.random() * (maxBarHeight - minBarHeight) + minBarHeight));
+            const num = Math.floor(Math.random() * (maxBarHeight - minBarHeight) + minBarHeight);
+            numbers.push(num);
         }
 
-        setArray(numbers);   
+        return numbers;
+    }
+
+    const normalDistributionGeneration = () =>
+    {
+        const numbers = [];
+
+        for (let i = 0; i < arrayLength; ++i)
+        {
+            const u = Math.random();
+            const prob = 1 - Math.abs(0.5 - u) * 2;
+            
+            if (prob > Math.random())
+            {
+                const num = Math.floor(u * (maxBarHeight - minBarHeight) + minBarHeight);
+                numbers.push(num);
+            }
+            else
+            {
+                i -= 1;
+            }
+        }
+
+        return numbers;
+    }
+
+    const exponentialDistributionGeneration = () =>
+    {
+        const numbers = [];
+
+        for (let i = 0; i < arrayLength; ++i)
+        {
+            const u = Math.random();
+            const exp = Math.log(1 - u) / (-3);
+            if (exp <= 1)
+            {
+                const num = Math.floor(exp * (maxBarHeight - minBarHeight) + minBarHeight);
+                numbers.push(num);
+            }
+            else
+            {
+                i -= 1;
+            }
+        }
+
+        return numbers;
     }
 
     const prepareSortingAnimation = (algorithmName) =>
@@ -65,7 +145,9 @@ const SortingVisualizer = () => {
         {
             case selectionSortName: animations = selectionSort(sortedArray).animations; break;
             case bubbleSortName: animations = bubbleSort(sortedArray).animations; break;
+            case shakerSortName: animations = shakerSort(sortedArray).animations; break;
             case insertionSortName: animations = insertionSort(sortedArray).animations; break;
+            case shellSortName: animations = shellSort(sortedArray).animations; break;
             case mergeSortName: animations = mergeSort(sortedArray).animations; break;
             case heapSortName: animations = heapSort(sortedArray).animations; break;
             case quickSortName: animations = quickSort(sortedArray).animations; break;
@@ -82,12 +164,15 @@ const SortingVisualizer = () => {
 
         resetBarsColor();
         setIsSorting(true);
+        let countSwap = false;
         animations.forEach((animation, index) => {
             let accessedBars = animation.accessed;
             let swapped = animation.swapped;
-            setTimeout(() => {
+            setTimeout(() => {        
                 if (!swapped)
                 {
+                    updateOperationsCounter();
+
                     if (accessedBars.length === 2)
                     {
                         let firstBarIndex = accessedBars[0];
@@ -103,6 +188,13 @@ const SortingVisualizer = () => {
                 }
                 else
                 {
+                    countSwap = !countSwap;
+
+                    if (countSwap)
+                    {
+                        updateOperationsCounter();
+                    }
+
                     setArray((array) => {
                         let barIndex = accessedBars[0];
                         let newValue = accessedBars[1];
@@ -115,6 +207,7 @@ const SortingVisualizer = () => {
         });
 
         setTimeout(() => {
+            operationsMade = -1;
             animateSortedArray();
         }, animations.length * animationDelay);
     }
@@ -158,40 +251,53 @@ const SortingVisualizer = () => {
         }
     }
 
-    const setArrayLength = (newLength) => {
-        arrayLength = newLength;
-        initializeArray();
+    const updateOperationsCounter = () => {
+        document.getElementById("counterText").innerText = "Operations: " + ++operationsMade;
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => initializeArray(), []);
+    useEffect(() => initializeArray(distribution), []);
 
     return (
         <div className="main-container">
             <div className="header">
                 <button onClick={() => initializeArray()} disabled={isSorting}>Generate Array</button>
-                <button onClick={() => prepareSortingAnimation(selectionSortName)} disabled={isSorting}>Selection Sort</button>
-                <button onClick={() => prepareSortingAnimation(bubbleSortName)} disabled={isSorting}>Bubble Sort</button>
-                <button onClick={() => prepareSortingAnimation(insertionSortName)} disabled={isSorting}>Insertion Sort</button>
-                <button onClick={() => prepareSortingAnimation(mergeSortName)} disabled={isSorting}>Merge Sort</button>
-                <button onClick={() => prepareSortingAnimation(heapSortName)} disabled={isSorting}>Heap Sort</button>
-                <button onClick={() => prepareSortingAnimation(quickSortName)} disabled={isSorting}>Quick Sort</button>
+                <button onClick={() => prepareSortingAnimation(document.getElementById("sortingAlgorithmSelector").value)} disabled={isSorting}>Sort Array</button>
+                
+                <select id="sortingAlgorithmSelector" disabled={isSorting}>
+                    <option value={selectionSortName} selected>Selection Sort</option>
+                    <option value={bubbleSortName}>Bubble Sort</option>
+                    <option value={shakerSortName}>Shaker Sort</option>
+                    <option value={insertionSortName}>Insertion Sort</option>
+                    <option value={shellSortName}>Shell Sort</option>
+                    <option value={mergeSortName}>Merge Sort</option>
+                    <option value={heapSortName}>Heap Sort</option>
+                    <option value={quickSortName}>Quick Sort</option>
+                </select>
 
-                <select id="arrayLengthSelector" onChange={() => setArrayLength(document.getElementById("arrayLengthSelector").value)} disabled={isSorting}>
+                <select id="distributionSelector" onChange={() => {distribution = document.getElementById("distributionSelector").value; initializeArray()}} disabled={isSorting}>
+                    <option value={uniformDistName} selected>Uniform Dist</option>
+                    <option value={normalDistName}>Normal Dist</option>
+                    <option value={exponentialDistName}>Exponential Dist</option>
+                </select>
+
+                <select id="arrayLengthSelector" onChange={() => {arrayLength = document.getElementById("arrayLengthSelector").value; initializeArray()}} disabled={isSorting}>
                     <option value="25">Bars: 25</option>
                     <option value="50">Bars: 50</option>
                     <option value="75">Bars: 75</option>
-                    <option value="100" selected="selected">Bars: 100</option>
+                    <option value="100" selected>Bars: 100</option>
                     <option value="125">Bars: 125</option>
                     <option value="125">Bars: 150</option>
                 </select>
 
                 <select id="animationSpeedSelector" onChange={() => {animationDelay = document.getElementById("animationSpeedSelector").value}} disabled={isSorting}>
                     <option value="10">Speed: 0.5x</option>
-                    <option value="5" selected="selected">Speed: 1x</option>
+                    <option value="5" selected>Speed: 1x</option>
                     <option value="3.3">Speed: 1.5x</option>
                     <option value="2.5">Speed: 2x</option>
                 </select>
+
+                <p id='counterText'>Operations: 0</p>
             </div>
 
             <div className="array-container" ref={reference}>
