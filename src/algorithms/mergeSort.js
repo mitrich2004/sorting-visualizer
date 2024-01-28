@@ -1,38 +1,25 @@
-//accessed: [index], swapped: false - access
-//accessed: [index, index], swapped: false - comparison
-//accessed: [index, value], swapped: true  - swap
-
-let animations = [];
-let aux = [];
-
-function mergeSort(array)
+function mergeSort(array, animations)
 {
-    let arrayLength = array.length;
-
-    animations = [];
-    aux = Array(arrayLength);
-    array = mergeSortHelper(array, 0, arrayLength - 1);
-
-    return {
-        result: array,
-        animations: animations
-    };
+    const aux = Array(array.length);
+    array = mergeSortHelper(array, 0, array.length - 1, animations, aux);
 }
 
-function mergeSortHelper(array, startIndex, endIndex)
+function mergeSortHelper(array, startIndex, endIndex, animations, aux)
 {
     if (startIndex < endIndex)
     {
         const midIndex = Math.floor((startIndex + endIndex) / 2);
-        mergeSortHelper(array, startIndex, midIndex);
-        mergeSortHelper(array, midIndex + 1, endIndex);
-        merge(array, startIndex, midIndex, endIndex);
+        
+        mergeSortHelper(array, startIndex, midIndex, animations, aux);
+        mergeSortHelper(array, midIndex + 1, endIndex, animations, aux);
+        
+        merge(array, startIndex, midIndex, endIndex, animations, aux);
     }
 
     return array;
 }
 
-function merge(array, startIndex, midIndex, endIndex)
+function merge(array, startIndex, midIndex, endIndex, animations, aux)
 {
     for (let i = startIndex; i <= endIndex; i++)
     {
@@ -46,26 +33,24 @@ function merge(array, startIndex, midIndex, endIndex)
     {
         if (leftIndex > midIndex)
         {
-            animations.push({accessed: [rightIndex], swapped: false});
-            animations.push({accessed: [k, aux[rightIndex]], swapped: true});
+            animations.push({accessed: [k, aux[rightIndex]], swapped: true}, {accessed: [k, aux[rightIndex]], swapped: true});
             array[k] = aux[rightIndex++];
         }
         else if (rightIndex > endIndex)
         {
-            animations.push({accessed: [leftIndex], swapped: false});
-            animations.push({accessed: [k, aux[leftIndex]], swapped: true});
+            animations.push({accessed: [k, aux[leftIndex]], swapped: true}, {accessed: [k, aux[leftIndex]], swapped: true});
             array[k] = aux[leftIndex++];
         }
         else if (aux[leftIndex] < aux[rightIndex])
         {
             animations.push({accessed: [leftIndex, rightIndex], swapped: false});
-            animations.push({accessed: [k, aux[leftIndex]], swapped: true});
+            animations.push({accessed: [k, aux[leftIndex]], swapped: true}, {accessed: [k, aux[leftIndex]], swapped: true});
             array[k] = aux[leftIndex++]
         }
         else
         {
             animations.push({accessed: [leftIndex, rightIndex], swapped: false});
-            animations.push({accessed: [k, aux[rightIndex]], swapped: true});
+            animations.push({accessed: [k, aux[rightIndex]], swapped: true}, {accessed: [k, aux[rightIndex]], swapped: true});
             array[k] = aux[rightIndex++];
         }
     }

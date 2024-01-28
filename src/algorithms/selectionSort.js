@@ -1,18 +1,12 @@
-//accessed: [index], swapped: false - access
-//accessed: [index, index], swapped: false - comparison
-//accessed: [index, value], swapped: true  - swap
+import {swap} from "../utils/methods.js";
 
-function selectionSort(array)
+function selectionSort(array, animations)
 {
-    const arrayLength = array.length;
-    const animations = [];
-
-    for (let i = 0; i < arrayLength; ++i)
+    for (let i = 0; i < array.length; ++i)
     {
-        animations.push({accessed: [i], swapped: false});
         let minNumIndex = i;
 
-        for (let j = i + 1; j < arrayLength; ++j)
+        for (let j = i + 1; j < array.length; ++j)
         {
             animations.push({accessed: [minNumIndex, j], swapped: false});
 
@@ -25,16 +19,10 @@ function selectionSort(array)
         if (i !== minNumIndex)
         {
             animations.push({accessed: [minNumIndex, i], swapped: false});
-            animations.push({accessed: [i, array[minNumIndex]], swapped: true});
-            animations.push({accessed: [minNumIndex, array[i]], swapped: true});
-            [array[i], array[minNumIndex]] = [array[minNumIndex], array[i]];
+            animations.push({accessed: [i, array[minNumIndex]], swapped: true}, {accessed: [minNumIndex, array[i]], swapped: true});
+            swap(array, i, minNumIndex);
         }
     }
-
-    return {
-        result: array,
-        animations: animations
-    };
 }
 
 export default selectionSort;

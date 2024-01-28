@@ -1,27 +1,16 @@
-//accessed: [index], swapped: false - access
-//accessed: [index, index], swapped: false - comparison
-//accessed: [index, value], swapped: true  - swap
+import {swap} from "../utils/methods.js";
 
-let animations = [];
-
-function quickSort(array)
+function quickSort(array, animations)
 {
-    animations = [];
-    array = quickSortHelper(array, 0, array.length - 1);
-
-    return {
-        result: array,
-        animations: animations
-    };
+    array = quickSortHelper(array, 0, array.length - 1, animations);
 }
 
-function quickSortHelper(array, startIndex, endIndex)
+function quickSortHelper(array, startIndex, endIndex, animations)
 {
     let midIndex = Math.floor((startIndex + endIndex) / 2);
 
-    animations.push({accessed: [startIndex, array[midIndex]], swapped: true});
-    animations.push({accessed: [midIndex, array[startIndex]], swapped: true});
-    [array[startIndex], array[midIndex]] = [array[midIndex], array[startIndex]];
+    animations.push({accessed: [startIndex, array[midIndex]], swapped: true}, {accessed: [midIndex, array[startIndex]], swapped: true});
+    swap(array, startIndex, midIndex);
 
     let pivotIndex = startIndex;    
     let leftIndex = startIndex + 1;
@@ -31,44 +20,42 @@ function quickSortHelper(array, startIndex, endIndex)
     {
         while (array[leftIndex] <= array[pivotIndex] && leftIndex < rightIndex)
         {
-            animations.push({accessed: [leftIndex], swapped: false});
+            animations.push({accessed: [leftIndex, pivotIndex], swapped: false});
             leftIndex += 1;
         }
 
         while (array[rightIndex] > array[pivotIndex])
         {
-            animations.push({accessed: [rightIndex], swapped: false});
+            animations.push({accessed: [rightIndex, pivotIndex], swapped: false});
             rightIndex -= 1;
         }
 
         if (leftIndex <= rightIndex)
         {
-            animations.push({accessed: [leftIndex, array[rightIndex]], swapped: true});
-            animations.push({accessed: [rightIndex, array[leftIndex]], swapped: true});
-            [array[leftIndex], array[rightIndex]] = [array[rightIndex], array[leftIndex]];
+            animations.push({accessed: [leftIndex, array[rightIndex]], swapped: true}, {accessed: [rightIndex, array[leftIndex]], swapped: true});
+            swap(array, leftIndex, rightIndex);
         }
     }
 
     while (array[rightIndex] > array[pivotIndex])
     {
-        animations.push({accessed: [rightIndex], swapped: false});
+        animations.push({accessed: [rightIndex, pivotIndex], swapped: false});
         rightIndex -= 1;
     }
 
-    animations.push({accessed: [pivotIndex, array[rightIndex]], swapped: true});
-    animations.push({accessed: [rightIndex, array[pivotIndex]], swapped: true});
-    [array[pivotIndex], array[rightIndex]] = [array[rightIndex], array[pivotIndex]];
+    animations.push({accessed: [pivotIndex, array[rightIndex]], swapped: true}, {accessed: [rightIndex, array[pivotIndex]], swapped: true});
+    swap(array, pivotIndex, rightIndex);
     pivotIndex = rightIndex;
 
 
     if (startIndex < pivotIndex - 1)
     {
-        array = quickSortHelper(array, startIndex, pivotIndex - 1);
+        array = quickSortHelper(array, startIndex, pivotIndex - 1, animations);
     }
 
     if (endIndex > pivotIndex + 1)
     {
-        array = quickSortHelper(array, pivotIndex + 1, endIndex);
+        array = quickSortHelper(array, pivotIndex + 1, endIndex, animations);
     }
 
     return array;
