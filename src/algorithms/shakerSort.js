@@ -2,15 +2,15 @@ import {swap} from "../utils/methods.js";
 
 function shakerSort(array, animations)
 {
-    let start = 0;
-    let end = array.length - 1;
-    let isSorted = false;
+    let startIndex = 0;
+    let endIndex = array.length - 1;
 
-    while (!isSorted)
+    while (endIndex > startIndex)
     {
-        isSorted = true;
+        let newEndIndex = 0;
+        let newStartIndex = 0;
 
-        for (let i = start; i < end; ++i)
+        for (let i = startIndex; i < endIndex; ++i)
         {
             animations.push({accessed: [i, i + 1], swapped: false});
             
@@ -18,14 +18,13 @@ function shakerSort(array, animations)
             {
                 animations.push({accessed: [i, array[i + 1]], swapped: true}, {accessed: [i + 1, array[i]], swapped: true});
                 swap(array, i, i + 1);
-                isSorted = false;
+                newEndIndex = i;
             }
         }
 
-        if (isSorted) break;
-        end -= 1;
+        endIndex = newEndIndex;
         
-        for (let i = end; i > start; --i)
+        for (let i = endIndex; i > startIndex; --i)
         {
             animations.push({accessed: [i - 1, i], swapped: false});
 
@@ -33,11 +32,11 @@ function shakerSort(array, animations)
             { 
                 animations.push({accessed: [i, array[i - 1]], swapped: true}, {accessed: [i - 1, array[i]], swapped: true});
                 swap(array, i - 1, i);
-                isSorted = false;
+                newStartIndex = i;
             }
         }
 
-        start += 1;
+        startIndex = newStartIndex;
     }
 }
 

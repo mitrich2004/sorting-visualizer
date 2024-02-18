@@ -6,12 +6,26 @@ import quickSort from "../algorithms/quickSort.js";
 import mergeSort from "../algorithms/mergeSort.js";
 import shellSort from "../algorithms/shellSort.js";
 import shakerSort from "../algorithms/shakerSort.js";
+import combSort from "../algorithms/combSort.js";
+import cocktailSort from "../algorithms/cocktailSort.js";
 
 const times = 100;
-const maxSize = 150;
-const minSize = 1;
+const maxSize = 1000;
+const minSize = 100;
 const maxElement = 1000;
 const minElement = -1000;
+
+//sorting algorithms tags
+const bubbleSortName = "bubble";
+const shakerSortName = "shaker";
+const selectionSortName = "selection";
+const cocktailSortName = "cocktail";
+const insertionSortName = "insertion";
+const shellSortName = "shell";
+const combSortName = "comb";
+const heapSortName = "heap";
+const mergeSortName = "merge";
+const quickSortName = "quick";
 
 function testSortingAlgorithm(algorithm)
 {
@@ -27,14 +41,16 @@ function testSortingAlgorithm(algorithm)
 
         switch (algorithm)
         {
-            case "selection":  selectionSort(array, []); break;
-            case "bubble": bubbleSort(array, []); break;
-            case "shaker": shakerSort(array, []); break;
-            case "insertion": insertionSort(array, []); break;
-            case "shell": shellSort(array, []); break;
-            case "merge": mergeSort(array, []); break;
-            case "heap": heapSort(array, []); break;
-            case "quick": quickSort(array, []); break;
+            case bubbleSortName: bubbleSort(array, []); break;
+            case shakerSortName: shakerSort(array, []); break;
+            case selectionSortName: selectionSort(array, []); break;
+            case cocktailSortName: cocktailSort(array, []); break;
+            case insertionSortName: insertionSort(array, []); break;
+            case shellSortName: shellSort(array, []); break;
+            case combSortName: combSort(array, []); break;
+            case heapSortName: heapSort(array, []); break;
+            case mergeSortName: mergeSort(array, []); break;
+            case quickSortName: quickSort(array, []); break;
             default: return false;
         }
         
@@ -49,11 +65,13 @@ function testSortingAlgorithm(algorithm)
     return true;
 }
 
-console.log("selection:", testSortingAlgorithm("selection"));
-console.log("bubble:", testSortingAlgorithm("bubble"));
-console.log("shaker:", testSortingAlgorithm("shaker"));
-console.log("insertion:", testSortingAlgorithm("insertion"));
-console.log("shell:", testSortingAlgorithm("shell"));
-console.log("merge:", testSortingAlgorithm("merge"));
-console.log("heap:", testSortingAlgorithm("heap"));
-console.log("quick:", testSortingAlgorithm("quick"));
+console.log(bubbleSortName, testSortingAlgorithm(bubbleSortName));
+console.log(shakerSortName, testSortingAlgorithm(shakerSortName));
+console.log(selectionSortName, testSortingAlgorithm(selectionSortName));
+console.log(cocktailSortName, testSortingAlgorithm(cocktailSortName));
+console.log(insertionSortName, testSortingAlgorithm(insertionSortName));
+console.log(shellSortName, testSortingAlgorithm(shellSortName));
+console.log(combSortName, testSortingAlgorithm(combSortName));
+console.log(heapSortName, testSortingAlgorithm(heapSortName));
+console.log(mergeSortName, testSortingAlgorithm(mergeSortName));
+console.log(quickSortName, testSortingAlgorithm(quickSortName));

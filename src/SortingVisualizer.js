@@ -7,22 +7,29 @@ import quickSort from './algorithms/quickSort.js';
 import mergeSort from './algorithms/mergeSort.js';
 import shellSort from './algorithms/shellSort.js';
 import shakerSort from './algorithms/shakerSort.js';
-import { exponentialDistributionGeneration, normalDistributionGeneration, uniformDistributionGeneration } from './utils/methods.js';
+import { exponentialDistributionGeneration, nearlySortedOrderGeneration, normalDistributionGeneration, reverseOrderGeneration, sortedOrderGeneration, uniformDistributionGeneration } from './utils/methods.js';
+import combSort from './algorithms/combSort.js';
+import cocktailSort from './algorithms/cocktailSort.js';
 
 //sorting algorithms tags
-const selectionSortName = "selection";
 const bubbleSortName = "bubble";
 const shakerSortName = "shaker";
+const selectionSortName = "selection";
+const cocktailSortName = "cocktail";
 const insertionSortName = "insertion";
 const shellSortName = "shell";
+const combSortName = "comb";
 const heapSortName = "heap";
-const quickSortName = "quick";
 const mergeSortName = "merge";
+const quickSortName = "quick";
 
 //distribution types
 const uniformDistName = "uniform";
 const normalDistName = "normal";
 const exponentialDistName = "exponential";
+const nearlySortedOrderName = "nearlySorted";
+const sortedOrderName = "sorted";
+const reverseOrderName = "reverse";
 
 //visual parameters
 const minBarHeight = 1;
@@ -36,7 +43,7 @@ const sortedColor = 'LimeGreen';
 var operationsMade = -1;
 var arrayLength = 100;
 var animationDelay = 5;
-var distribution = "uniform";
+var distribution = uniformDistName;
 
 const SortingVisualizer = () => {
     const [array, setArray] = useState([]);
@@ -58,6 +65,9 @@ const SortingVisualizer = () => {
             case uniformDistName: uniformDistributionGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
             case normalDistName: normalDistributionGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
             case exponentialDistName: exponentialDistributionGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
+            case nearlySortedOrderName: nearlySortedOrderGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
+            case sortedOrderName: sortedOrderGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
+            case reverseOrderName: reverseOrderGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
             default: break;
         }
 
@@ -71,13 +81,15 @@ const SortingVisualizer = () => {
         
         switch (algorithmName)
         {
-            case selectionSortName: selectionSort(arrayCopy, animations); break;
             case bubbleSortName: bubbleSort(arrayCopy, animations); break;
             case shakerSortName: shakerSort(arrayCopy, animations); break;
+            case selectionSortName: selectionSort(arrayCopy, animations); break;
+            case cocktailSortName: cocktailSort(arrayCopy, animations); break;
             case insertionSortName: insertionSort(arrayCopy, animations); break;
             case shellSortName: shellSort(arrayCopy, animations); break;
-            case mergeSortName: mergeSort(arrayCopy, animations); break;
+            case combSortName: combSort(arrayCopy, animations); break;
             case heapSortName: heapSort(arrayCopy, animations); break;
+            case mergeSortName: mergeSort(arrayCopy, animations); break;
             case quickSortName: quickSort(arrayCopy, animations); break;
             default: break;
         }
@@ -87,7 +99,6 @@ const SortingVisualizer = () => {
     
     const animateSorting = (animations) => {
         if (isSorting) return;
-        let countSwap = false;
 
         resetBarsColor();
         setIsSorting(true);        
@@ -108,8 +119,7 @@ const SortingVisualizer = () => {
                 }
                 else
                 {
-                    countSwap = !countSwap;
-                    if (countSwap) updateOperationsCounter();
+                    updateOperationsCounter();
 
                     setArray((array) => {
                         let barIndex = accessedBars[0];
@@ -179,10 +189,12 @@ const SortingVisualizer = () => {
                     <option value={bubbleSortName}>Bubble Sort</option>
                     <option value={shakerSortName}>Shaker Sort</option>
                     <option value={selectionSortName}>Selection Sort</option>
+                    <option value={cocktailSortName}>Cocktail Sort</option>
                     <option value={insertionSortName}>Insertion Sort</option>
+                    <option value={shellSortName}>Shell Sort</option>
+                    <option value={combSortName}>Comb Sort</option>
                     <option value={heapSortName}>Heap Sort</option>
                     <option value={mergeSortName}>Merge Sort</option>
-                    <option value={shellSortName}>Shell Sort</option>
                     <option value={quickSortName}>Quick Sort</option>
                 </select>
 
@@ -190,6 +202,9 @@ const SortingVisualizer = () => {
                     <option value={uniformDistName}>Uniform Dist</option>
                     <option value={normalDistName}>Normal Dist</option>
                     <option value={exponentialDistName}>Exponential Dist</option>
+                    <option value={nearlySortedOrderName}>Nearly Sorted Order</option>
+                    <option value={sortedOrderName}>Sorted Order</option>
+                    <option value={reverseOrderName}>Reverse Order</option>
                 </select>
 
                 <select id="arrayLengthSelector" defaultValue={"100"} onChange={() => {arrayLength = document.getElementById("arrayLengthSelector").value; initializeArray()}} disabled={isSorting}>

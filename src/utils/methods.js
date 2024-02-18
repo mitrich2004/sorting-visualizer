@@ -32,8 +32,49 @@ const exponentialDistributionGeneration = (numbers, size, max, min) =>
     }
 }
 
+const nearlySortedOrderGeneration = (numbers, size, max, min) =>
+{
+    let curr = min;
+
+    for (let i = 0; i < size; ++i)
+    {
+        if (Math.random() < 0.9)
+        {
+            numbers.push(curr);
+        }
+        else
+        {
+            numbers.push(curr - getRandomHight(Math.random(), curr - min, 1));
+        }
+
+        curr = Math.min(max, curr + getRandomHight(Math.random(), (max - curr) / (size - i) * 2, (max - curr) / (size - i) / 2));
+    }
+}
+
+const sortedOrderGeneration = (numbers, size, max, min) =>
+{
+    let curr = min;
+
+    for (let i = 0; i < size; ++i)
+    {
+        numbers.push(curr);
+        curr = Math.min(max, curr + getRandomHight(Math.random(), (max - curr) / (size - i) * 2, (max - curr) / (size - i) / 2));
+    }
+} 
+
+const reverseOrderGeneration = (numbers, size, max, min) =>
+{
+    let curr = max;
+
+    for (let i = 0; i < size; ++i)
+    {
+        numbers.push(curr);
+        curr = Math.max(min, curr - getRandomHight(Math.random(), (curr - min) / (size - i) * 2, (curr - min) / (size - i) / 2));
+    }
+}
+
 const getRandomHight = (coefficient, max, min) => {
     return Math.floor(coefficient * (max - min) + min)
 }
 
-export {swap, uniformDistributionGeneration, normalDistributionGeneration, exponentialDistributionGeneration};
+export {swap, uniformDistributionGeneration, normalDistributionGeneration, exponentialDistributionGeneration, nearlySortedOrderGeneration, sortedOrderGeneration, reverseOrderGeneration};

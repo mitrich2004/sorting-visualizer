@@ -10,13 +10,12 @@ function shellSort(array, animations)
             for (j = i; j >= gap && array[j - gap] > tmp; j -= gap)
             {
                 animations.push({accessed: [j - gap, i], swapped: false});
-                animations.push({accessed: [j, array[j - gap]], swapped: true}, {accessed: [j, array[j - gap]], swapped: true});
+                animations.push({accessed: [j, array[j - gap]], swapped: true});
 
                 array[j] = array[j - gap]; 
             }
 
-            animations.push({accessed: [j, i], swapped: false});
-            animations.push({accessed: [j, tmp], swapped: true}, {accessed: [j, tmp], swapped: true});
+            animations.push({accessed: [j, tmp], swapped: true});
             array[j] = tmp;
         }
     }

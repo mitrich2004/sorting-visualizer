@@ -1,58 +1,47 @@
 function mergeSort(array, animations)
 {
     const aux = Array(array.length);
-    array = mergeSortHelper(array, 0, array.length - 1, animations, aux);
-}
 
-function mergeSortHelper(array, startIndex, endIndex, animations, aux)
-{
-    if (startIndex < endIndex)
+    for (let length = 1; length < array.length; length *= 2)
     {
-        const midIndex = Math.floor((startIndex + endIndex) / 2);
-        
-        mergeSortHelper(array, startIndex, midIndex, animations, aux);
-        mergeSortHelper(array, midIndex + 1, endIndex, animations, aux);
-        
-        merge(array, startIndex, midIndex, endIndex, animations, aux);
+        for (let startIndex = 0; startIndex < array.length; startIndex += 2 * length)
+        {
+            let midIndex = Math.min(startIndex + length, array.length);
+            let endIndex = Math.min(startIndex + 2 * length, array.length);
+
+            merge(array, startIndex, midIndex, endIndex, aux, animations);
+        }
+
+        for (let i = 0; i < array.length; ++i)
+        {
+            array[i] = aux[i];
+        }
     }
-
-    return array;
 }
 
-function merge(array, startIndex, midIndex, endIndex, animations, aux)
+function merge(array, startIndex, midIndex, endIndex, aux, animations)
 {
-    for (let i = startIndex; i <= endIndex; i++)
-    {
-        aux[i] = array[i];
-    } 
-        
     let leftIndex = startIndex;
-    let rightIndex = midIndex + 1;
+    let rightIndex = midIndex;
 
-    for (let k = startIndex; k <= endIndex; ++k)
+    for (let k = leftIndex; k < endIndex; ++k)
     {
-        if (leftIndex > midIndex)
-        {
-            animations.push({accessed: [k, aux[rightIndex]], swapped: true}, {accessed: [k, aux[rightIndex]], swapped: true});
-            array[k] = aux[rightIndex++];
-        }
-        else if (rightIndex > endIndex)
-        {
-            animations.push({accessed: [k, aux[leftIndex]], swapped: true}, {accessed: [k, aux[leftIndex]], swapped: true});
-            array[k] = aux[leftIndex++];
-        }
-        else if (aux[leftIndex] < aux[rightIndex])
+        if (leftIndex < midIndex && rightIndex < endIndex)
         {
             animations.push({accessed: [leftIndex, rightIndex], swapped: false});
-            animations.push({accessed: [k, aux[leftIndex]], swapped: true}, {accessed: [k, aux[leftIndex]], swapped: true});
-            array[k] = aux[leftIndex++]
+        }
+
+        if (leftIndex < midIndex && (rightIndex >= endIndex || array[leftIndex] <= array[rightIndex]))
+        {
+            animations.push({accessed: [k, array[leftIndex]], swapped: true});
+            aux[k] = array[leftIndex++];
         }
         else
         {
-            animations.push({accessed: [leftIndex, rightIndex], swapped: false});
-            animations.push({accessed: [k, aux[rightIndex]], swapped: true}, {accessed: [k, aux[rightIndex]], swapped: true});
-            array[k] = aux[rightIndex++];
+            animations.push({accessed: [k, array[rightIndex]], swapped: true});
+            aux[k] = array[rightIndex++];
         }
     }
 }
+
 export default mergeSort;

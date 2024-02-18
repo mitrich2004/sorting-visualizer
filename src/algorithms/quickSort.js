@@ -2,7 +2,7 @@ import {swap} from "../utils/methods.js";
 
 function quickSort(array, animations)
 {
-    array = quickSortHelper(array, 0, array.length - 1, animations);
+    quickSortHelper(array, 0, array.length - 1, animations);
 }
 
 function quickSortHelper(array, startIndex, endIndex, animations)
@@ -18,11 +18,15 @@ function quickSortHelper(array, startIndex, endIndex, animations)
 
     while (leftIndex < rightIndex)
     {
-        while (array[leftIndex] <= array[pivotIndex] && leftIndex < rightIndex)
+        animations.push({accessed: [leftIndex, pivotIndex], swapped: false});
+
+        while (array[leftIndex] <= array[pivotIndex])
         {
             animations.push({accessed: [leftIndex, pivotIndex], swapped: false});
             leftIndex += 1;
         }
+
+        animations.push({accessed: [rightIndex, pivotIndex], swapped: false});
 
         while (array[rightIndex] > array[pivotIndex])
         {
@@ -30,12 +34,14 @@ function quickSortHelper(array, startIndex, endIndex, animations)
             rightIndex -= 1;
         }
 
-        if (leftIndex <= rightIndex)
+        if (leftIndex < rightIndex)
         {
             animations.push({accessed: [leftIndex, array[rightIndex]], swapped: true}, {accessed: [rightIndex, array[leftIndex]], swapped: true});
             swap(array, leftIndex, rightIndex);
         }
     }
+
+    animations.push({accessed: [rightIndex, pivotIndex], swapped: false});
 
     while (array[rightIndex] > array[pivotIndex])
     {
@@ -50,15 +56,13 @@ function quickSortHelper(array, startIndex, endIndex, animations)
 
     if (startIndex < pivotIndex - 1)
     {
-        array = quickSortHelper(array, startIndex, pivotIndex - 1, animations);
+        quickSortHelper(array, startIndex, pivotIndex - 1, animations);
     }
 
     if (endIndex > pivotIndex + 1)
     {
-        array = quickSortHelper(array, pivotIndex + 1, endIndex, animations);
+        quickSortHelper(array, pivotIndex + 1, endIndex, animations);
     }
-
-    return array;
 }
 
 export default quickSort;

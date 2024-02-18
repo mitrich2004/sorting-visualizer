@@ -2,14 +2,13 @@ import {swap} from "../utils/methods.js";
 
 function bubbleSort(array, animations)
 {
-    let isSorted = false;
-    let countSorted = 0;
+    let endIndex = array.length;
     
-    while (!isSorted)
+    while (endIndex > 1)
     {
-        isSorted = true;
+        let newEndIndex = 0;
 
-        for (let i = 1; i < array.length - countSorted; ++i)
+        for (let i = 1; i < endIndex; ++i)
         {
             animations.push({accessed: [i - 1, i], swapped: false});
 
@@ -17,11 +16,11 @@ function bubbleSort(array, animations)
             {
                 animations.push({accessed: [i - 1, array[i]], swapped: true}, {accessed: [i, array[i - 1]], swapped: true});
                 swap(array, i, i - 1);
-                isSorted = false;
+                newEndIndex = i;
             }
         }
         
-        countSorted += 1;
+        endIndex = newEndIndex;
     }
 }
 
