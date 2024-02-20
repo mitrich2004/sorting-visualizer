@@ -12,14 +12,13 @@ const uniformDistributionGeneration = (numbers, size, max, min) =>
         numbers.push(getRandomHight(Math.random(), max, min));
     }
 }
-
-//Box–Muller transform
+    
 const normalDistributionGeneration = (numbers, size, max, min) =>
 {
     while (numbers.length < size)
     {
         let mean = 0.5;
-        let stddev = 0.18;
+        let stddev = 0.2;
 
         let u1 = 1 - Math.random();
         let u2 =  Math.random();
@@ -33,7 +32,6 @@ const normalDistributionGeneration = (numbers, size, max, min) =>
     }
 }
 
-//inversion method
 const exponentialDistributionGeneration = (numbers, size, max, min) =>
 {
     let rate = 2.5;
