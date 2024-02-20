@@ -9,7 +9,7 @@ import shakerSort from "../algorithms/shakerSort.js";
 import combSort from "../algorithms/combSort.js";
 import cocktailSort from "../algorithms/cocktailSort.js";
 
-const times = 100;
+const times = 10;
 const maxSize = 1000;
 const minSize = 100;
 const maxElement = 1000;

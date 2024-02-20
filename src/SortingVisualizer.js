@@ -199,12 +199,12 @@ const SortingVisualizer = () => {
                 </select>
 
                 <select id="distributionSelector" defaultValue={uniformDistName} onChange={() => {distribution = document.getElementById("distributionSelector").value; initializeArray()}} disabled={isSorting}>
-                    <option value={uniformDistName}>Uniform Dist</option>
-                    <option value={normalDistName}>Normal Dist</option>
-                    <option value={exponentialDistName}>Exponential Dist</option>
-                    <option value={nearlySortedOrderName}>Nearly Sorted Order</option>
-                    <option value={sortedOrderName}>Sorted Order</option>
-                    <option value={reverseOrderName}>Reverse Order</option>
+                    <option value={uniformDistName}>Uniform</option>
+                    <option value={normalDistName}>Normal</option>
+                    <option value={exponentialDistName}>Exponential</option>
+                    <option value={nearlySortedOrderName}>Nearly Sorted</option>
+                    <option value={sortedOrderName}>Sorted</option>
+                    <option value={reverseOrderName}>Reverse</option>
                 </select>
 
                 <select id="arrayLengthSelector" defaultValue={"100"} onChange={() => {arrayLength = document.getElementById("arrayLengthSelector").value; initializeArray()}} disabled={isSorting}>

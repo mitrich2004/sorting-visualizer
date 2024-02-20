@@ -38,17 +38,15 @@ function cocktailSort(array, animations)
 
         if (maxValueIndex !== maxIndex)
         {
-            animations.push({accessed: [maxValueIndex, minValueIndex], swapped: false});
-            
-            if (array[maxValueIndex] > array[minValueIndex])
-            {
-                animations.push({accessed: [maxIndex, array[maxValueIndex]], swapped: true}, {accessed: [maxValueIndex, array[maxIndex]], swapped: true});
-                swap(array, maxIndex, maxValueIndex);
-            }
-            else
+            if (maxValueIndex === minIndex)
             {
                 animations.push({accessed: [maxIndex, array[minValueIndex]], swapped: true}, {accessed: [minValueIndex, array[maxIndex]], swapped: true});
                 swap(array, maxIndex, minValueIndex);
+            }
+            else
+            {
+                animations.push({accessed: [maxIndex, array[maxValueIndex]], swapped: true}, {accessed: [maxValueIndex, array[maxIndex]], swapped: true});
+                swap(array, maxIndex, maxValueIndex);
             }
         }
 

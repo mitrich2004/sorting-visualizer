@@ -13,21 +13,34 @@ const uniformDistributionGeneration = (numbers, size, max, min) =>
     }
 }
 
+//Box–Muller transform
 const normalDistributionGeneration = (numbers, size, max, min) =>
 {
     while (numbers.length < size)
     {
-        const u = Math.random();
-        const prob = 1 - Math.abs(0.5 - u) * 2;
-        if (prob > Math.random()) numbers.push(getRandomHight(u, max, min));
+        let mean = 0.5;
+        let stddev = 0.18;
+
+        let u1 = 1 - Math.random();
+        let u2 =  Math.random();
+
+        let mag = stddev * Math.sqrt(-2.0 * Math.log(u1))
+        let z0 = mag * Math.cos(2.0 * Math.PI * u2) + mean;
+        let z1 = mag * Math.sin(2.0 * Math.PI * u2) + mean;
+        
+        numbers.push(getRandomHight(z0, max, min));
+        numbers.push(getRandomHight(z1, max, min));
     }
 }
 
+//inversion method
 const exponentialDistributionGeneration = (numbers, size, max, min) =>
 {
+    let rate = 2.5;
+
     while (numbers.length < size)
     {
-        const exp = Math.log(1 - Math.random()) / (-3);
+        const exp = Math.log(1 - Math.random()) / (-rate);
         if (exp <= 1) numbers.push(getRandomHight(exp, max, min));
     }
 }
