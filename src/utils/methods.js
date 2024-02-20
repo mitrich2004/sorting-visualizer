@@ -12,7 +12,7 @@ const uniformDistributionGeneration = (numbers, size, max, min) =>
         numbers.push(getRandomHight(Math.random(), max, min));
     }
 }
-    
+
 const normalDistributionGeneration = (numbers, size, max, min) =>
 {
     while (numbers.length < size)
@@ -27,8 +27,8 @@ const normalDistributionGeneration = (numbers, size, max, min) =>
         let z0 = mag * Math.cos(2.0 * Math.PI * u2) + mean;
         let z1 = mag * Math.sin(2.0 * Math.PI * u2) + mean;
         
-        numbers.push(getRandomHight(z0, max, min));
-        numbers.push(getRandomHight(z1, max, min));
+        if (z0 >= 0 && z0 <= 1) numbers.push(getRandomHight(z0, max, min));
+        if (z1 >= 0 && z1 <= 1) numbers.push(getRandomHight(z1, max, min));
     }
 }
 
