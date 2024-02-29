@@ -1,105 +1,53 @@
 import {useState, useEffect, useRef} from 'react';
-import selectionSort from './algorithms/selectionSort.js';
-import bubbleSort from './algorithms/bubbleSort.js';
-import insertionSort from './algorithms/insertionSort.js';
-import heapSort from './algorithms/heapSort.js';
-import quickSort from './algorithms/quickSort.js';
-import mergeSort from './algorithms/mergeSort.js';
-import shellSort from './algorithms/shellSort.js';
-import shakerSort from './algorithms/shakerSort.js';
-import { exponentialDistributionGeneration, nearlySortedOrderGeneration, normalDistributionGeneration, reverseOrderGeneration, sortedOrderGeneration, uniformDistributionGeneration } from './utils/methods.js';
-import combSort from './algorithms/combSort.js';
-import cocktailSort from './algorithms/cocktailSort.js';
-
-//sorting algorithms tags
-const bubbleSortName = "bubble";
-const shakerSortName = "shaker";
-const selectionSortName = "selection";
-const cocktailSortName = "cocktail";
-const insertionSortName = "insertion";
-const shellSortName = "shell";
-const combSortName = "comb";
-const heapSortName = "heap";
-const mergeSortName = "merge";
-const quickSortName = "quick";
-
-//distribution types
-const uniformDistName = "uniform";
-const normalDistName = "normal";
-const exponentialDistName = "exponential";
-const nearlySortedOrderName = "nearlySorted";
-const sortedOrderName = "sorted";
-const reverseOrderName = "reverse";
+import { arrayGenerators, inputTypeOptions, sortingAlgorithms, sortingAlgorithmOptions, arrayLengthOptions, animationSpeedOptions } from './utils/constants.js';
 
 //visual parameters
 const minBarHeight = 1;
 const maxBarHeight = 80;
-const barWidthCoefficient = 0.7;
 const baseColor = 'DarkBlue'
 const accessColor = 'Red';
 const sortedColor = 'LimeGreen';
 
 //sorting parameters
-var operationsMade = -1;
+var sortingAlgorithm = sortingAlgorithms.bubble;
+var arrayGenerator = arrayGenerators.uniform;
 var arrayLength = 100;
 var animationDelay = 5;
-var distribution = uniformDistName;
+var operationsMade = 0;
 
 const SortingVisualizer = () => {
+    //hooks
     const [array, setArray] = useState([]);
     const [isSorting, setIsSorting] = useState(false);
     const reference = useRef(null);
 
+    //selectors
+    const sortingAlgorithmSelector = document.getElementById("sortingAlgorithmSelector");
+    const arrayLengthSelector = document.getElementById("arrayLengthSelector");
+    const animationSpeedSelector = document.getElementById("animationSpeedSelector");
+    const distributionSelector = document.getElementById("distributionSelector");
+
     const initializeArray = () => 
-    {
-        if (isSorting) return;
-
-        const numbers = [];
-
-        operationsMade = -1;
+    {   
+        const array = [];
         resetBarsColor();
-        updateOperationsCounter();
-        
-        switch(distribution)
-        {
-            case uniformDistName: uniformDistributionGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
-            case normalDistName: normalDistributionGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
-            case exponentialDistName: exponentialDistributionGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
-            case nearlySortedOrderName: nearlySortedOrderGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
-            case sortedOrderName: sortedOrderGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
-            case reverseOrderName: reverseOrderGeneration(numbers, arrayLength, maxBarHeight, minBarHeight); break;
-            default: break;
-        }
+        updateOperationsCounter(0);
 
-        setArray(numbers);   
+        arrayGenerator(array, arrayLength, maxBarHeight, minBarHeight);
+        setArray(array);   
     }
 
-    const prepareSortingAnimation = (algorithmName) =>
+    const prepareSortingAnimation = () =>
     {
         let animations = [];
         let arrayCopy = [...array];
         
-        switch (algorithmName)
-        {
-            case bubbleSortName: bubbleSort(arrayCopy, animations); break;
-            case shakerSortName: shakerSort(arrayCopy, animations); break;
-            case selectionSortName: selectionSort(arrayCopy, animations); break;
-            case cocktailSortName: cocktailSort(arrayCopy, animations); break;
-            case insertionSortName: insertionSort(arrayCopy, animations); break;
-            case shellSortName: shellSort(arrayCopy, animations); break;
-            case combSortName: combSort(arrayCopy, animations); break;
-            case heapSortName: heapSort(arrayCopy, animations); break;
-            case mergeSortName: mergeSort(arrayCopy, animations); break;
-            case quickSortName: quickSort(arrayCopy, animations); break;
-            default: break;
-        }
-        
+        updateOperationsCounter(0);
+        sortingAlgorithm(arrayCopy, animations);
         animateSorting(animations);
     }   
     
     const animateSorting = (animations) => {
-        if (isSorting) return;
-
         resetBarsColor();
         setIsSorting(true);        
         
@@ -107,35 +55,26 @@ const SortingVisualizer = () => {
             let accessedBars = animation.accessed;
             let swapped = animation.swapped;
             
-            setTimeout(() => {        
+            setTimeout(() => {    
                 if (!swapped)
                 {
-                    let firstBarIndex = accessedBars[0];
-                    let secondBarIndex = accessedBars[1];
-                    
-                    updateOperationsCounter();
-                    animateBarAccess(firstBarIndex);
-                    animateBarAccess(secondBarIndex);
+                    animateBarAccess(accessedBars[0]);
+                    animateBarAccess(accessedBars[1]);
                 }
                 else
                 {
-                    updateOperationsCounter();
-
                     setArray((array) => {
-                        let barIndex = accessedBars[0];
-                        let newValue = accessedBars[1];
                         const newArray = [...array];
-                        newArray[barIndex] = newValue;
+                        newArray[accessedBars[0]] = accessedBars[1];
                         return newArray;
                     })
                 }
+                
+                updateOperationsCounter(++operationsMade);
             }, index * animationDelay);
         });
 
-        setTimeout(() => {
-            operationsMade = -1;
-            animateSortedArray();
-        }, animations.length * animationDelay);
+        setTimeout(() => animateSortedArray(), animations.length * animationDelay);
     }
 
     const animateBarAccess = (index) => 
@@ -172,67 +111,50 @@ const SortingVisualizer = () => {
         }
     }
 
-    const updateOperationsCounter = () => {
-        document.getElementById("counterText").innerText = "Operations: " + ++operationsMade;
+    const updateOperationsCounter = (operations) => {
+        operationsMade = operations;
+        document.getElementById("operationsCounter").innerText = "Operations: " + operations;
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => initializeArray(distribution), []);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => initializeArray(arrayGenerator), []);
 
     return (
         <div className="main-container">
             <div className="header">
                 <button onClick={() => initializeArray()} disabled={isSorting}>Generate Array</button>
-                <button onClick={() => prepareSortingAnimation(document.getElementById("sortingAlgorithmSelector").value)} disabled={isSorting}>Sort Array</button>
+                <button onClick={() => prepareSortingAnimation()} disabled={isSorting}>Sort Array</button>
                 
-                <select id="sortingAlgorithmSelector" defaultValue={bubbleSortName} disabled={isSorting}>
-                    <option value={bubbleSortName}>Bubble Sort</option>
-                    <option value={shakerSortName}>Shaker Sort</option>
-                    <option value={selectionSortName}>Selection Sort</option>
-                    <option value={cocktailSortName}>Cocktail Sort</option>
-                    <option value={insertionSortName}>Insertion Sort</option>
-                    <option value={shellSortName}>Shell Sort</option>
-                    <option value={combSortName}>Comb Sort</option>
-                    <option value={heapSortName}>Heap Sort</option>
-                    <option value={mergeSortName}>Merge Sort</option>
-                    <option value={quickSortName}>Quick Sort</option>
+                <select id="sortingAlgorithmSelector" defaultValue={"bubble"} disabled={isSorting} 
+                onChange={() => sortingAlgorithm = sortingAlgorithms[sortingAlgorithmSelector.value]}>
+                    {sortingAlgorithmOptions.map(({ value, label }) => <option value={value}>{label}</option>)}
                 </select>
 
-                <select id="distributionSelector" defaultValue={uniformDistName} onChange={() => {distribution = document.getElementById("distributionSelector").value; initializeArray()}} disabled={isSorting}>
-                    <option value={uniformDistName}>Uniform</option>
-                    <option value={normalDistName}>Normal</option>
-                    <option value={exponentialDistName}>Exponential</option>
-                    <option value={nearlySortedOrderName}>Nearly Sorted</option>
-                    <option value={sortedOrderName}>Sorted</option>
-                    <option value={reverseOrderName}>Reverse</option>
+                <select id="distributionSelector" defaultValue={"uniform"} disabled={isSorting}
+                onChange={() => {arrayGenerator = arrayGenerators[distributionSelector.value]; initializeArray()}}>
+                    {inputTypeOptions.map(({ value, label }) => <option value={value}>{label}</option>)}
                 </select>
 
-                <select id="arrayLengthSelector" defaultValue={"100"} onChange={() => {arrayLength = document.getElementById("arrayLengthSelector").value; initializeArray()}} disabled={isSorting}>
-                    <option value="25">Bars: 25</option>
-                    <option value="50">Bars: 50</option>
-                    <option value="75">Bars: 75</option>
-                    <option value="100">Bars: 100</option>
-                    <option value="125">Bars: 125</option>
-                    <option value="125">Bars: 150</option>
+                <select id="arrayLengthSelector" defaultValue={"100"} disabled={isSorting}
+                onChange={() => {arrayLength = arrayLengthSelector.value; initializeArray()}}>
+                    {arrayLengthOptions.map(({ value, label }) => <option value={value}>{label}</option>)}
                 </select>
 
-                <select id="animationSpeedSelector" defaultValue={"5"} onChange={() => {animationDelay = document.getElementById("animationSpeedSelector").value}} disabled={isSorting}>
-                    <option value="10">Speed: 0.5x</option>
-                    <option value="5">Speed: 1x</option>
-                    <option value="3.3">Speed: 1.5x</option>
-                    <option value="2.5">Speed: 2x</option>
+                <select id="animationSpeedSelector" defaultValue={"5"} disabled={isSorting}
+                onChange={() => animationDelay = animationSpeedSelector.value}>
+                    {animationSpeedOptions.map(({ value, label }) => <option value={value}>{label}</option>)}
                 </select>
 
-                <p id='counterText'>Operations: 0</p>
+                <p id="operationsCounter">Operations: 0</p>
             </div>
 
             <div className="array-container" ref={reference}>
                 {array.map((barHeight, index) => {
                     return <div style = {
                         {
-                            height: barHeight + 'vh', 
-                            width: 95 / arrayLength * barWidthCoefficient + '%', 
-                            margin: 20 / arrayLength * barWidthCoefficient + '%'
+                            height: `${barHeight}vh`, 
+                            width: `${70 / arrayLength}%`, 
+                            margin: `${14 / arrayLength}%`
                         }} 
                     className="array-bar" key={index}/>
                 })}

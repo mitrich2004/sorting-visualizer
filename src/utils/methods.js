@@ -5,21 +5,21 @@ function swap(array, i, j)
     array[j] = tmp;
 }
 
-const uniformDistributionGeneration = (numbers, size, max, min) =>
+const uniformGenerator = (numbers, size, max, min) =>
 {
     for (let i = 0; i < size; ++i)
     {
-        numbers.push(getRandomHight(Math.random(), max, min));
+        numbers.push(getRandomValue(Math.random(), max, min));
     }
 }
 
-const normalDistributionGeneration = (numbers, size, max, min) =>
+const normalGenerator = (numbers, size, max, min) =>
 {
+    let mean = 0.5;
+    let stddev = 0.2;
+    
     while (numbers.length < size)
     {
-        let mean = 0.5;
-        let stddev = 0.2;
-
         let u1 = 1 - Math.random();
         let u2 =  Math.random();
 
@@ -27,65 +27,77 @@ const normalDistributionGeneration = (numbers, size, max, min) =>
         let z0 = mag * Math.cos(2.0 * Math.PI * u2) + mean;
         let z1 = mag * Math.sin(2.0 * Math.PI * u2) + mean;
         
-        if (z0 >= 0 && z0 <= 1) numbers.push(getRandomHight(z0, max, min));
-        if (z1 >= 0 && z1 <= 1) numbers.push(getRandomHight(z1, max, min));
+        if (z0 >= 0 && z0 <= 1) numbers.push(getRandomValue(z0, max, min));
+        if (numbers.length >= size) break;
+        if (z1 >= 0 && z1 <= 1) numbers.push(getRandomValue(z1, max, min));
     }
 }
 
-const exponentialDistributionGeneration = (numbers, size, max, min) =>
+const exponentialGenerator = (numbers, size, max, min) =>
 {
     let rate = 2.5;
 
     while (numbers.length < size)
     {
         const exp = Math.log(1 - Math.random()) / (-rate);
-        if (exp <= 1) numbers.push(getRandomHight(exp, max, min));
+        if (exp <= 1) numbers.push(getRandomValue(exp, max, min));
     }
 }
 
-const nearlySortedOrderGeneration = (numbers, size, max, min) =>
+const nearlySortedGenerator = (numbers, size, max, min) =>
 {
     let curr = min;
 
     for (let i = 0; i < size; ++i)
     {
-        if (Math.random() < 0.9)
+        if (Math.random() < 0.1)
         {
-            numbers.push(curr);
+            numbers.push(curr - getRandomValue(Math.random(), curr - min, 1));
         }
         else
         {
-            numbers.push(curr - getRandomHight(Math.random(), curr - min, 1));
+            numbers.push(curr);
         }
 
-        curr = Math.min(max, curr + getRandomHight(Math.random(), (max - curr) / (size - i) * 2, (max - curr) / (size - i) / 2));
+        let maxStep = (max - curr) / (size - i) * 2;
+        let minStep = (max - curr) / (size - i) / 2;
+        
+        curr = Math.min(max, curr + getRandomValue(Math.random(), maxStep, minStep));
     }
 }
 
-const sortedOrderGeneration = (numbers, size, max, min) =>
+const sortedGenerator = (numbers, size, max, min) =>
 {
     let curr = min;
 
     for (let i = 0; i < size; ++i)
     {
         numbers.push(curr);
-        curr = Math.min(max, curr + getRandomHight(Math.random(), (max - curr) / (size - i) * 2, (max - curr) / (size - i) / 2));
+
+        let maxStep = (max - curr) / (size - i) * 2;
+        let minStep = (max - curr) / (size - i) / 2;
+
+        curr = Math.min(max, curr + getRandomValue(Math.random(), maxStep, minStep));
     }
 } 
 
-const reverseOrderGeneration = (numbers, size, max, min) =>
+const reverseGenerator = (numbers, size, max, min) =>
 {
     let curr = max;
 
     for (let i = 0; i < size; ++i)
     {
         numbers.push(curr);
-        curr = Math.max(min, curr - getRandomHight(Math.random(), (curr - min) / (size - i) * 2, (curr - min) / (size - i) / 2));
+        
+        let maxStep = (curr - min) / (size - i) * 2;
+        let minStep = (curr - min) / (size - i) / 2;
+
+        curr = Math.max(min, curr - getRandomValue(Math.random(), maxStep, minStep));
     }
 }
 
-const getRandomHight = (coefficient, max, min) => {
+const getRandomValue = (coefficient, max, min) => {
     return Math.floor(coefficient * (max - min) + min)
 }
 
-export {swap, uniformDistributionGeneration, normalDistributionGeneration, exponentialDistributionGeneration, nearlySortedOrderGeneration, sortedOrderGeneration, reverseOrderGeneration};
+export {swap, uniformGenerator, normalGenerator, exponentialGenerator, nearlySortedGenerator, sortedGenerator, reverseGenerator, getRandomValue};
