@@ -66,6 +66,7 @@ const SortingVisualizer = () => {
                     const bars = reference.current.children;
                     const barStyle = bars[accessedBars[0]].style;
                     barStyle.height = `${accessedBars[1]}vh`;
+                    array[accessedBars[0]] = accessedBars[1];
                 }
                 
                 updateOperationsCounter(++operationsMade);

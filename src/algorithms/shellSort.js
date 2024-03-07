@@ -7,6 +7,8 @@ function shellSort(array, animations)
             let tmp = array[i];
             let j;
 
+            animations.push({accessed: [i, i - gap], swapped: false});
+
             for (j = i; j >= gap && array[j - gap] > tmp; j -= gap)
             {
                 animations.push({accessed: [j - gap, i], swapped: false});
