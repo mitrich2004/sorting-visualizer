@@ -63,11 +63,9 @@ const SortingVisualizer = () => {
                 }
                 else
                 {
-                    setArray((array) => {
-                        const newArray = [...array];
-                        newArray[accessedBars[0]] = accessedBars[1];
-                        return newArray;
-                    })
+                    const bars = reference.current.children;
+                    const barStyle = bars[accessedBars[0]].style;
+                    barStyle.height = `${accessedBars[1]}vh`;
                 }
                 
                 updateOperationsCounter(++operationsMade);
@@ -149,15 +147,16 @@ const SortingVisualizer = () => {
             </div>
 
             <div className="array-container" ref={reference}>
-                {array.map((barHeight, index) => {
-                    return <div style = {
-                        {
+                {
+                    array.map((barHeight, index) => {
+                        return <div style = {{
                             height: `${barHeight}vh`, 
                             width: `${70 / arrayLength}%`, 
                             margin: `${14 / arrayLength}%`
                         }} 
-                    className="array-bar" key={index}/>
-                })}
+                        className="array-bar" key={index}/>
+                    })
+                }
             </div>
         </div>
     );

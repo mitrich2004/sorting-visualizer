@@ -1,11 +1,7 @@
 import { sortingAlgorithms } from "./constants.js";
 import { uniformGenerator } from "./methods.js";
 
-//testing parameters
-const times = 10;
-const size = 1000;
-
-function testSortingAlgorithm(sortingAlgorithm)
+function testSortingAlgorithm(sortingAlgorithm, times, size)
 {
     for (let t = 0; t < times; ++t)
     {
@@ -29,5 +25,5 @@ function testSortingAlgorithm(sortingAlgorithm)
 }
 
 for (const [name, sortingAlgorithm] of Object.entries(sortingAlgorithms)) {
-    console.log(name, testSortingAlgorithm(sortingAlgorithm));
+    console.log(name, testSortingAlgorithm(sortingAlgorithm, 10, 1000));
 }

@@ -1,6 +1,6 @@
 function shellSort(array, animations)
 {
-    for (let gap = Math.floor(array.length / 2); gap > 0; gap = Math.floor(gap / 2))
+    for (let gap = Math.floor(array.length / 2.25); gap > 0; gap = Math.floor(gap / 2.25))
     {
         for (let i = gap; i < array.length; ++i)
         {
