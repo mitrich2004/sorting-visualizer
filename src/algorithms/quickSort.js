@@ -19,10 +19,8 @@ function quickSortHelper(array, startIndex, endIndex, animations)
 function partition(array, startIndex, endIndex, animations)
 {
     let midIndex = Math.floor((startIndex + endIndex) / 2);
-    animations.push({accessed: [startIndex, array[midIndex]], swapped: true}, {accessed: [midIndex, array[startIndex]], swapped: true});
-    swap(array, startIndex, midIndex);
 
-    let pivotIndex = startIndex;    
+    let pivot = array[midIndex];    
     let leftIndex = startIndex - 1;
     let rightIndex = endIndex + 1;
 
@@ -31,14 +29,14 @@ function partition(array, startIndex, endIndex, animations)
         do
         {
             leftIndex += 1;
-            animations.push({accessed: [leftIndex, pivotIndex], swapped: false});
-        } while (array[leftIndex] < array[pivotIndex])
+            animations.push({accessed: [leftIndex, array.indexOf(pivot)], swapped: false});
+        } while (array[leftIndex] < pivot)
 
         do
         {
             rightIndex -= 1;
-            animations.push({accessed: [rightIndex, pivotIndex], swapped: false});
-        } while (array[rightIndex] > array[pivotIndex])
+            animations.push({accessed: [rightIndex, array.indexOf(pivot)], swapped: false});
+        } while (array[rightIndex] > pivot)
 
         if (leftIndex >= rightIndex)
         {

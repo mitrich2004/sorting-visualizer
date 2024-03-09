@@ -7,9 +7,11 @@ const gap = 100;
 const times = 100;
 const rounder = 1000;
 
-const measure = (sortingAlgorithm, sortingAlgorithmName, arrayGenerator, inputType) =>
+const measure = (sortingAlgorithmName, inputType) =>
 {
     const results = [];
+    let sortingAlgorithm = sortingAlgorithms[sortingAlgorithmName];
+    let arrayGenerator = arrayGenerators[inputType];
 
     for (let size = gap; size <= maxSize; size += gap)
     {
@@ -38,11 +40,9 @@ const measure = (sortingAlgorithm, sortingAlgorithmName, arrayGenerator, inputTy
 const saveResults = (results, algName, distName) => {
     const filename = `${algName}_${distName}.txt`;
     const writer = fs.createWriteStream(filename, {flags: "w"});
-    
+
     results.forEach((measurement) => writer.write(`${measurement.size} ${measurement.time}\n`));
     writer.close();
-    
-    console.log("done");
 }
 
-measure(sortingAlgorithms.quick, "quick", arrayGenerators.reverse, "reverse");
+measure("quick", "sorted");
